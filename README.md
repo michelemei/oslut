@@ -1,22 +1,28 @@
 # Oslut - osl Unit Test
 
-A Cpp Test Unit Framework
-(for now only Windows)
+A Cpp Test Unit Framework (currently only for Windows). 
 
-There are a lot of framework for testing the c++ code: see [wikipedia](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#C.2B.2B).
-During the development of [G2D](https://github.com/michelemei/g2d) I created my framework for testing. The goal was a **quick** and **simple** framework, using only header files.
+There are a lot of [framework for testing the c++ code](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#C.2B.2B). Most of them test only exported classes and methods from a shared library. During the development of [G2D](https://github.com/michelemei/g2d) i needed to test **internal** (not exported) geometric algorithms.
+
+The goal of Oslut is to be a very very *quick* and *simple* framework, using only header files, that it is able to test internal classes, methods and functions.
 
 ## Quick Start
 
 ### Installation
 
-The oslut installation is very simple: copy the __oslut.h__ file somewhere on your hard disk, copy the files __test.cpp__ (you can rename it) in your project and change the first line to point to oslut.h. Finish. Write your tests.
+The oslut installation is very simple:
 
-> I suggest you create a directory called __oslut__, parallel to the source's root directory and put in this folder __oslut.h__.
+1. copy `oslut.h` somewhere on your hard disk,
+2. copy `test.cpp` (you can rename it) in your project and change the first line to point to `oslut.h`.
 
-Suppose you have to write tests for the __Point__ class, you can choose between two possibilities:
- - write all tests in test.cpp file,
- - differentiate the test file.
+Finish. Write your tests.
+
+> I suggest you create a directory called **oslut**, parallel to the source's root directory and put in this folder `oslut.h`.
+
+Suppose you have to write tests for the **Point** class, you can choose between two possibilities:
+
+* write all tests in test.cpp file,
+* differentiate the test file.
 
 Some examples of tests:
  
@@ -48,7 +54,8 @@ ENDTEST
 
 ### Run
 
-To run the tests, call oslut.exe passing two parameters:
+To run tests call `oslut.exe` passing two parameters:
+
  1. the dll name to test,
  2. XML file where append the test results,
 
@@ -58,7 +65,22 @@ in this way:
 oslut.exe myshared.dll myresult.xml
 ```
 
-Oslut uses **LoadLibrary**, then __oslut.exe__ must be put in the same folder the dll to be tested.
+> **Warning**
+> Oslut uses *LoadLibrary*, therefore **oslut.exe** must be in the same shared library's folder.
 
-> If you are using Visual Studio, you can put in "Post Build Step" the test execution.
-In this way, each time you compile you will have the test results.
+### How it works?
+
+The Oslut strategy is very simple:
+
+1. `TEST` define create an exported the test function,
+2. `olsult.exe` load library and calls `TEST` functions. 
+
+#### Test define
+
+The test define have a signature like this: `bool(char* filename, long* line, char* name)`, where:
+
+1. `filename` is the name of file that contains the test,
+2. `line` is the starting line of test into `filename`,
+3. `name` is the name of test.
+
+All these are output parameters that are automatically populated by `TEST` define.
